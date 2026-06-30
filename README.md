@@ -86,7 +86,7 @@ Canonical Candidate
   Merge Resolver        (source-priority conflict resolution)
       │
       ▼
-Confidence Calculator
+Confidence Calculator  (Overall Confidence = Σ(Field Confidence × Weight) / Σ(Weights))
       │
       ▼
   Projection Layer      (configurable output schema)
@@ -108,7 +108,7 @@ candidate-transformer/
 │
 ├── config/
 │   ├── default.json
-│   └──- custom.json
+│   └── custom.json
 │
 ├── sample_data/
 │   ├── structured/
