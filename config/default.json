@@ -1,0 +1,32 @@
+{
+  "confidence_weights": {
+    "full_name": 0.20,
+    "emails": 0.15,
+    "phones": 0.15,
+    "location": 0.10,
+    "skills": 0.15,
+    "experience": 0.15,
+    "education": 0.10
+  },
+
+  "source_priority": [
+    "recruiter_csv",
+    "ats_json",
+    "linkedin",
+    "github",
+    "resume_pdf",
+    "resume_txt"
+  ],
+
+  "projection": {
+    "include_confidence": true,
+    "include_provenance": true,
+    "on_missing": "null"
+  },
+
+  "normalization": {
+    "default_country": "IN",
+    "proper_case_names": true,
+    "deduplicate_skills": true
+  }
+}
