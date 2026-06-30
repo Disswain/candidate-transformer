@@ -1,0 +1,63 @@
+{
+  "candidate": {
+    "candidate_id": "C001",
+    "full_name": "John Anderson",
+    "headline": "Senior Backend Developer",
+    "years_experience": 6,
+
+    "contact": {
+      "email": "john.anderson@example.com",
+      "phone": "+14155551234"
+    },
+
+    "location": {
+      "city": "San Francisco",
+      "region": "California",
+      "country": "United States"
+    },
+
+    "links": {
+      "linkedin": "https://linkedin.com/in/johnanderson",
+      "github": "https://github.com/johnanderson",
+      "portfolio": "https://johnanderson.dev",
+      "other": [
+        "https://medium.com/@johnanderson"
+      ]
+    },
+
+    "skills": [
+      "Python",
+      "FastAPI",
+      "Docker",
+      "Kubernetes",
+      "PostgreSQL"
+    ],
+
+    "experience": [
+      {
+        "company": "TechNova Inc",
+        "title": "Senior Backend Engineer",
+        "start_date": "2021-04",
+        "end_date": "Present",
+        "description": "Designed scalable REST APIs and ETL pipelines."
+      },
+      {
+        "company": "CloudWorks",
+        "title": "Software Engineer",
+        "start_date": "2018-06",
+        "end_date": "2021-03",
+        "description": "Built distributed backend services."
+      }
+    ],
+
+    "education": [
+      {
+        "institution": "University of Washington",
+        "degree": "Bachelor of Science",
+        "field": "Computer Science",
+        "start_date": "2014",
+        "end_date": "2018"
+      }
+    ]
+  }
+}

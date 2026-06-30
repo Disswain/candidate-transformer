@@ -1,25 +1,33 @@
+"""
+Experience Mapper.
+
+Ensures experience is always returned as
+list[dict[str, Any]].
+"""
+
 from __future__ import annotations
 
-from src.models.candidate import Experience
+from typing import Any
 
 
 class ExperienceMapper:
 
     @staticmethod
-    def from_list(items: list) -> list[Experience]:
+    def from_value(
+        value: Any,
+    ) -> list[dict[str, Any]]:
 
-        experiences: list[Experience] = []
+        if value is None:
+            return []
 
-        for item in items:
+        if not isinstance(value, list):
+            return []
 
-            experiences.append(
-                Experience(
-                    company=item.get("company"),
-                    title=item.get("title"),
-                    start_date=item.get("start_date"),
-                    end_date=item.get("end_date"),
-                    description=item.get("description"),
-                )
-            )
+        experience: list[dict[str, Any]] = []
 
-        return experiences
+        for item in value:
+
+            if isinstance(item, dict):
+                experience.append(item)
+
+        return experience

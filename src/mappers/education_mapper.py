@@ -1,25 +1,33 @@
+"""
+Education Mapper.
+
+Ensures education is always returned as
+list[dict[str, Any]].
+"""
+
 from __future__ import annotations
 
-from src.models.candidate import Education
+from typing import Any
 
 
 class EducationMapper:
 
     @staticmethod
-    def from_list(items: list) -> list[Education]:
+    def from_value(
+        value: Any,
+    ) -> list[dict[str, Any]]:
 
-        education: list[Education] = []
+        if value is None:
+            return []
 
-        for item in items:
+        if not isinstance(value, list):
+            return []
 
-            education.append(
-                Education(
-                    institution=item.get("institution"),
-                    degree=item.get("degree"),
-                    field=item.get("field"),
-                    start_date=item.get("start_date"),
-                    end_date=item.get("end_date"),
-                )
-            )
+        education: list[dict[str, Any]] = []
+
+        for item in value:
+
+            if isinstance(item, dict):
+                education.append(item)
 
         return education

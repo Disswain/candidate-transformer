@@ -1,18 +1,14 @@
 """
-Configuration Manager
+Application Configuration Service.
 
-Loads runtime configuration used throughout the application.
+Loads and validates runtime configuration.
 
-Features
---------
-- Default configuration
-- Custom configuration override
-- Deep dictionary merge
-- Validation
-- Singleton pattern
+Supports:
+- default.json
+- custom.json
 
-Author:
-    Candidate Transformer
+Provides one configuration object to the
+entire application.
 """
 
 from __future__ import annotations
@@ -22,48 +18,139 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
-
-class ConfigError(Exception):
-    """Raised when configuration is invalid."""
+from pydantic import BaseModel, ConfigDict, Field
 
 
-class ConfigManager:
+# ==========================================================
+# Projection Models
+# ==========================================================
+
+
+class ProjectionField(BaseModel):
     """
-    Central configuration manager.
-
-    Usage:
-        config = ConfigManager("config/default.json")
-        country = config.get("normalization.default_country")
+    One projected output field.
     """
 
-    def __init__(self, default_config: str, custom_config: str | None = None):
-        self._config = self._load_json(default_config)
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
 
-        if custom_config:
-            override = self._load_json(custom_config)
-            self._config = self._deep_merge(self._config, override)
+    path: str
 
-        self._validate()
+    from_: str | None = Field(
+        default=None,
+        alias="from",
+    )
+
+
+class ProjectionConfig(BaseModel):
+    """
+    Projection configuration.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    include_confidence: bool = True
+
+    include_provenance: bool = True
+
+    on_missing: str = "null"
+
+
+# ==========================================================
+# Normalization
+# ==========================================================
+
+
+class NormalizationConfig(BaseModel):
+    """
+    Normalization configuration.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    default_country: str = "IN"
+
+    proper_case_names: bool = True
+
+    deduplicate_skills: bool = True
+
+
+# ==========================================================
+# Application Config
+# ==========================================================
+
+
+class AppConfig(BaseModel):
+    """
+    Root application configuration.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    confidence_weights: dict[str, float]
+
+    source_priority: list[str]
+
+    fields: list[ProjectionField] = Field(
+        default_factory=list
+    )
+
+    projection: ProjectionConfig
+
+    normalization: NormalizationConfig
+
+
+# ==========================================================
+# Config Service
+# ==========================================================
+
+
+class ConfigService:
+
+    def __init__(
+        self,
+        default_path: str,
+        custom_path: str | None = None,
+    ) -> None:
+
+        config = self._load(default_path)
+
+        if custom_path:
+
+            custom = self._load(custom_path)
+
+            config = self._merge(
+                config,
+                custom,
+            )
+
+        self._config = AppConfig.model_validate(config)
+
+    # --------------------------------------------------
 
     @staticmethod
-    def _load_json(path: str) -> dict:
+    def _load(
+        path: str,
+    ) -> dict:
+
         file = Path(path)
 
         if not file.exists():
-            raise ConfigError(f"Configuration file not found: {path}")
+            raise FileNotFoundError(path)
 
-        try:
-            with file.open("r", encoding="utf-8") as f:
-                return json.load(f)
+        with file.open(
+            "r",
+            encoding="utf-8",
+        ) as f:
 
-        except json.JSONDecodeError as exc:
-            raise ConfigError(f"Invalid JSON in {path}") from exc
+            return json.load(f)
+
+    # --------------------------------------------------
 
     @staticmethod
-    def _deep_merge(base: dict, override: dict) -> dict:
-        """
-        Recursively merge dictionaries.
-        """
+    def _merge(
+        base: dict,
+        override: dict,
+    ) -> dict:
 
         merged = deepcopy(base)
 
@@ -74,50 +161,47 @@ class ConfigManager:
                 and isinstance(merged[key], dict)
                 and isinstance(value, dict)
             ):
-                merged[key] = ConfigManager._deep_merge(
+
+                merged[key] = ConfigService._merge(
                     merged[key],
                     value,
                 )
+
             else:
+
                 merged[key] = value
 
         return merged
 
-    def _validate(self) -> None:
-        required = [
-            "confidence_weights",
-            "source_priority",
-            "projection",
-            "normalization",
-        ]
-
-        for key in required:
-            if key not in self._config:
-                raise ConfigError(
-                    f"Missing required configuration key: {key}"
-                )
-
-    def get(self, path: str, default: Any = None) -> Any:
-        """
-        Retrieve nested config values.
-
-        Example:
-            get("projection.include_confidence")
-        """
-
-        current = self._config
-
-        for part in path.split("."):
-            if not isinstance(current, dict):
-                return default
-
-            current = current.get(part)
-
-            if current is None:
-                return default
-
-        return current
+    # --------------------------------------------------
 
     @property
-    def raw(self) -> dict:
-        return deepcopy(self._config)
+    def config(
+        self,
+    ) -> AppConfig:
+
+        return self._config
+
+    # --------------------------------------------------
+
+    def get(
+        self,
+        path: str,
+        default: Any = None,
+    ) -> Any:
+
+        value: Any = self._config.model_dump(
+            by_alias=True
+        )
+
+        for key in path.split("."):
+
+            if not isinstance(value, dict):
+                return default
+
+            value = value.get(key)
+
+            if value is None:
+                return default
+
+        return value

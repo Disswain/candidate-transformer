@@ -1,64 +1,209 @@
 """
 ATS JSON Extractor.
+
+Reads ATS JSON exports and converts them into
+IntermediateCandidate objects.
+
+Responsibilities
+----------------
+- Read JSON
+- Support single candidate object
+- Support list of candidates
+- Handle nested contact/location fields
+- Ignore unknown fields
+- Never normalize
+- Never merge
 """
 
 from __future__ import annotations
 
-from typing import List
+from typing import Any
 
-from src.models.candidate import Candidate
-from src.utils.file_loader import FileLoader
-from src.utils.logger import logger
 from src.interfaces.extractor import BaseExtractor
+from src.models.intermediate import IntermediateCandidate
+from src.utils.constants import SOURCE_ATS
+from src.utils.file_loader import FileLoader
+from src.utils.logger import get_logger
+
+logger = get_logger(__name__)
+
 
 class JSONExtractor(BaseExtractor):
     """
-    Extract Candidate objects from ATS JSON.
+    Extract candidates from ATS JSON.
     """
 
-    def extract(self, path: str) -> List[Candidate]:
+    def extract(
+        self,
+        source: str,
+    ) -> list[IntermediateCandidate]:
 
-        logger.info("Loading ATS JSON: %s", path)
+        logger.info("Reading ATS JSON: %s", source)
 
-        data = FileLoader.load_json(path)
+        data = FileLoader.read_json(source)
 
-        # Support both a single candidate object
-        # and a list of candidates.
+        records = self._resolve_records(data)
 
-        if isinstance(data, dict):
-            records = [data]
+        candidates: list[IntermediateCandidate] = []
 
-        elif isinstance(data, list):
-            records = data
+        for index, record in enumerate(records):
 
-        else:
-            raise ValueError("Unsupported ATS JSON format.")
+            try:
+                candidates.append(
+                    self._parse_candidate(record)
+                )
 
-        candidates: List[Candidate] = []
+            except Exception as exc:
 
-        for record in records:
-
-            candidate_data = record.get("candidate", record)
-
-            contact = candidate_data.get("contact", {})
-
-            candidate = Candidate(
-                full_name=candidate_data.get("name"),
-                emails=[contact["email"]]
-                if contact.get("email")
-                else [],
-                phones=[contact["phone"]]
-                if contact.get("phone")
-                else [],
-                headline=candidate_data.get("headline"),
-                skills=candidate_data.get("skills", []),
-            )
-
-            candidates.append(candidate)
+                logger.exception(
+                    "Failed parsing candidate %d: %s",
+                    index,
+                    exc,
+                )
 
         logger.info(
-            "Loaded %d candidates from ATS JSON",
+            "Successfully extracted %d candidate(s).",
             len(candidates),
         )
 
         return candidates
+
+    # --------------------------------------------------
+
+    @staticmethod
+    def _resolve_records(
+        data: Any,
+    ) -> list[dict[str, Any]]:
+        """
+        Accept common ATS export formats.
+
+        Supported:
+
+        {
+            "candidate": {...}
+        }
+
+        {
+            "candidates": [...]
+        }
+
+        [
+            {...},
+            {...}
+        ]
+        """
+
+        if isinstance(data, list):
+            return data
+
+        if not isinstance(data, dict):
+            raise ValueError("Unsupported JSON structure.")
+
+        if "candidates" in data:
+            return data["candidates"]
+
+        if "candidate" in data:
+            return [data["candidate"]]
+
+        return [data]
+
+    # --------------------------------------------------
+
+    @staticmethod
+    def _parse_candidate(
+        record: dict[str, Any],
+    ) -> IntermediateCandidate:
+
+        contact = record.get("contact", {})
+        location = record.get("location", {})
+        links = record.get("links", {})
+
+        emails = JSONExtractor._ensure_list(
+            contact.get("emails")
+            or contact.get("email")
+        )
+
+        phones = JSONExtractor._ensure_list(
+            contact.get("phones")
+            or contact.get("phone")
+        )
+
+        skills = JSONExtractor._ensure_list(
+            record.get("skills")
+        )
+
+        return IntermediateCandidate(
+
+            source=SOURCE_ATS,
+
+            candidate_id=record.get("candidate_id"),
+
+            full_name=record.get("full_name")
+            or record.get("name"),
+
+            headline=record.get("headline"),
+
+            years_experience=record.get(
+                "years_experience"
+            ),
+
+            emails=[
+                str(email)
+                for email in emails
+                if email
+            ],
+
+            phones=[
+                str(phone)
+                for phone in phones
+                if phone
+            ],
+
+            city=location.get("city"),
+
+            region=location.get("region"),
+
+            country=location.get("country"),
+
+            linkedin=links.get("linkedin"),
+
+            github=links.get("github"),
+
+            portfolio=links.get("portfolio"),
+
+            other_links=links.get(
+                "other",
+                [],
+            ),
+
+            skills=skills,
+
+            experience=record.get(
+                "experience",
+                [],
+            ),
+
+            education=record.get(
+                "education",
+                [],
+            ),
+
+            metadata={
+                "raw_record": record
+            },
+        )
+
+    # --------------------------------------------------
+
+    @staticmethod
+    def _ensure_list(
+        value: Any,
+    ) -> list[Any]:
+
+        if value is None:
+            return []
+
+        if isinstance(value, list):
+            return value
+
+        return [value]

@@ -1,0 +1,40 @@
+John Anderson
+
+Senior Backend Developer
+
+Email:
+john.anderson@example.com
+
+Phone:
++1 4155551234
+
+LinkedIn
+https://linkedin.com/in/johnanderson
+
+GitHub
+https://github.com/johnanderson
+
+Portfolio
+https://johnanderson.dev
+
+Skills
+
+Python, FastAPI, Docker, Kubernetes, PostgreSQL, AWS, REST API, Microservices
+
+Experience
+
+TechNova Inc
+Senior Backend Engineer
+Apr 2021 - Present
+
+CloudWorks
+Software Engineer
+Jun 2018 - Mar 2021
+
+Education
+
+University of Washington
+
+Bachelor of Science
+
+Computer Science

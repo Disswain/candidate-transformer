@@ -1,14 +1,14 @@
 """
-Name Normalizer
+Name Normalizer.
 
 Responsibilities
-
-✓ Trim whitespace
-✓ Remove prefixes
-✓ Collapse spaces
-✓ Handle initials
-✓ Proper casing
-✓ Unicode safe
+----------------
+- Remove prefixes
+- Collapse whitespace
+- Normalize initials
+- Proper case
+- Unicode safe
+- Never fail
 """
 
 from __future__ import annotations
@@ -16,52 +16,59 @@ from __future__ import annotations
 import re
 
 from src.interfaces.normalizer import BaseNormalizer
+from src.models.candidate import Candidate
 from src.models.intermediate import IntermediateCandidate
-
-
-PREFIXES = (
-    "mr",
-    "mrs",
-    "ms",
-    "dr",
-    "prof",
-)
+from src.utils.constants import NAME_PREFIXES
 
 
 class NameNormalizer(BaseNormalizer):
+    """
+    Normalize candidate names.
+    """
+
+    _SPACE_PATTERN = re.compile(r"\s+")
+    _DOT_PATTERN = re.compile(r"\.")
 
     def normalize(
         self,
         candidate: IntermediateCandidate,
-    ) -> IntermediateCandidate:
+    ) -> Candidate:
 
-        if not candidate.full_name:
-            return candidate
+        name = candidate.full_name
 
-        name = candidate.full_name.strip()
+        if not name:
 
-        # Collapse whitespace
-        name = re.sub(r"\s+", " ", name)
+            return Candidate()
 
-        # Remove dots from initials
-        name = name.replace(".", "")
+        name = self._SPACE_PATTERN.sub(
+            " ",
+            name.strip(),
+        )
 
-        parts = name.split()
+        name = self._DOT_PATTERN.sub(
+            "",
+            name,
+        )
 
-        # Remove prefixes
-        while parts and parts[0].lower() in PREFIXES:
-            parts.pop(0)
+        parts = []
 
-        cleaned = []
+        for token in name.split():
 
-        for part in parts:
+            lower = token.lower()
 
-            if len(part) == 1:
-                cleaned.append(part.upper())
+            if lower in NAME_PREFIXES:
+                continue
 
+            if len(token) == 1:
+                parts.append(token.upper())
             else:
-                cleaned.append(part.capitalize())
+                parts.append(token.capitalize())
 
-        candidate.full_name = " ".join(cleaned)
+        normalized = " ".join(parts)
 
-        return candidate
+        return Candidate(
+            candidate_id=candidate.candidate_id,
+            full_name=normalized,
+            headline=candidate.headline,
+            years_experience=candidate.years_experience,
+        )

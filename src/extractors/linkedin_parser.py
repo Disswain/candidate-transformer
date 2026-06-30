@@ -1,85 +1,58 @@
 """
-LinkedIn Profile Extractor
+LinkedIn Profile Extractor.
 
-Reads LinkedIn JSON and converts it into an
+Reads a LinkedIn profile JSON file and converts it into an
 IntermediateCandidate.
 
-No normalization.
-No validation.
-No merging.
+Responsibilities
+----------------
+- Read LinkedIn JSON
+- Extract candidate fields
+- Never normalize
+- Never merge
+- Return IntermediateCandidate
 """
 
 from __future__ import annotations
 
-from src.interfaces.extractor import BaseExtractor
+from src.extractors.base_profile_parser import BaseProfileParser
 from src.models.intermediate import IntermediateCandidate
 from src.utils.constants import SOURCE_LINKEDIN
 from src.utils.file_loader import FileLoader
-from src.utils.logger import logger
+from src.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
-class LinkedInParser(BaseExtractor):
+class LinkedInParser(BaseProfileParser):
+    """
+    LinkedIn profile extractor.
+    """
 
     def extract(
         self,
         source: str,
     ) -> list[IntermediateCandidate]:
 
-        logger.info("Reading LinkedIn profile %s", source)
+        logger.info("Reading LinkedIn profile: %s", source)
 
-        data = FileLoader.load_json(source)
+        data = FileLoader.read_json(source)
 
-        location = data.get("location", {})
+        # Some LinkedIn exports wrap the profile
+        if "profile" in data and isinstance(data["profile"], dict):
+            data = data["profile"]
 
-        candidate = IntermediateCandidate(
-
+        candidate = self.build_candidate(
             source=SOURCE_LINKEDIN,
-
-            full_name=data.get("name"),
-
-            emails=[
-                data["email"]
-            ] if data.get("email") else [],
-
-            phones=[
-                data["phone"]
-            ] if data.get("phone") else [],
-
-            city=location.get("city"),
-
-            region=location.get("region"),
-
-            country=location.get("country"),
-
-            linkedin=data.get("profile_url"),
-
-            github=data.get("github_url"),
-
-            portfolio=data.get("portfolio"),
-
-            other_links=data.get(
-                "other_links",
-                [],
-            ),
-
-            headline=data.get("headline"),
-
-            skills=data.get(
-                "skills",
-                [],
-            ),
-
-            experience=data.get(
-                "experience",
-                [],
-            ),
-
-            education=data.get(
-                "education",
-                [],
-            ),
+            data=data,
+            metadata={
+                "source_file": source,
+                "parser": "linkedin",
+            },
         )
 
-        logger.info("LinkedIn parsed successfully.")
+        logger.info(
+            "Successfully extracted LinkedIn profile."
+        )
 
         return [candidate]

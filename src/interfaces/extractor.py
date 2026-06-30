@@ -1,14 +1,15 @@
 """
-Base Extractor Interface
+Base Extractor Interface.
 
-Every extractor must implement this interface.
+Every extractor converts an external source into one or more
+IntermediateCandidate objects.
 """
 
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
-from src.models.candidate import Candidate
+from src.models.intermediate import IntermediateCandidate
 
 
 class BaseExtractor(ABC):
@@ -17,17 +18,20 @@ class BaseExtractor(ABC):
     """
 
     @abstractmethod
-    def extract(self, source: str) -> list[Candidate]:
+    def extract(
+        self,
+        source: str,
+    ) -> list[IntermediateCandidate]:
         """
-        Extract candidate(s) from a source.
+        Extract candidate data from a source.
 
         Parameters
         ----------
-        source : str
-            Path or URL of the data source.
+        source:
+            File path or URL.
 
         Returns
         -------
-        list[Candidate]
+        list[IntermediateCandidate]
         """
         raise NotImplementedError

@@ -1,0 +1,2 @@
+candidate_id,full_name,email,phone,headline,city,region,country,linkedin,github,portfolio,years_experience,skills
+C001,John Anderson,john.anderson@example.com,+1 4155551234,Senior Backend Developer,San Francisco,California,USA,https://linkedin.com/in/johnanderson,https://github.com/johnanderson,https://johnanderson.dev,6,"Python,FastAPI,Docker,Kubernetes,PostgreSQL"

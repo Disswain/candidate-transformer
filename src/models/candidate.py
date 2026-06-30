@@ -1,145 +1,124 @@
 """
-Canonical Candidate Models
+Canonical Candidate Model
 
-This module defines the canonical schema shared by the entire pipeline.
+This model represents the normalized candidate profile used
+throughout the remainder of the pipeline.
 
-Every extractor MUST output these models.
-Every normalizer works on these models.
-Every merge stage consumes these models.
-Every projection stage produces these models.
+Pipeline
 
-Author:
-    Candidate Transformer
-
-Python:
-    3.11+
+IntermediateCandidate
+        │
+        ▼
+Normalization
+        │
+        ▼
+Candidate
+        │
+        ▼
+Validation
+        ▼
+Merge
+        ▼
+Projection
+        ▼
+Output JSON
 """
 
 from __future__ import annotations
 
-from typing import List, Optional
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, HttpUrl
+from src.models.confidence import Confidence
+from src.models.education import Education
+from src.models.experience import Experience
+from src.models.links import Links
+from src.models.location import Location
+from src.models.provenance import Provenance
 from src.models.skill import Skill
-
-# ----------------------------------------------------------
-# Location
-# ----------------------------------------------------------
-
-
-class Location(BaseModel):
-    city: Optional[str] = None
-    region: Optional[str] = None
-    country: Optional[str] = None
-
-
-# ----------------------------------------------------------
-# Links
-# ----------------------------------------------------------
-
-
-class Links(BaseModel):
-    linkedin: Optional[HttpUrl] = None
-    github: Optional[HttpUrl] = None
-    portfolio: Optional[HttpUrl] = None
-    other: List[HttpUrl] = Field(default_factory=list)
-
-
-# ----------------------------------------------------------
-# Experience
-# ----------------------------------------------------------
-
-
-class Experience(BaseModel):
-    company: Optional[str] = None
-    title: Optional[str] = None
-
-    start_date: Optional[str] = None
-    end_date: Optional[str] = None
-
-    description: Optional[str] = None
-
-
-# ----------------------------------------------------------
-# Education
-# ----------------------------------------------------------
-
-
-class Education(BaseModel):
-    institution: Optional[str] = None
-    degree: Optional[str] = None
-    field: Optional[str] = None
-
-    start_date: Optional[str] = None
-    end_date: Optional[str] = None
-
-
-# ----------------------------------------------------------
-# Provenance
-# ----------------------------------------------------------
-
-
-class Provenance(BaseModel):
-    field: str
-    source: str
-    method: str
-
-
-# ----------------------------------------------------------
-# Confidence
-# ----------------------------------------------------------
-
-
-class Confidence(BaseModel):
-    full_name: float = 0.0
-    emails: float = 0.0
-    phones: float = 0.0
-    location: float = 0.0
-    skills: float = 0.0
-    experience: float = 0.0
-    education: float = 0.0
-    overall: float = 0.0
-
-
-# ----------------------------------------------------------
-# Candidate
-# ----------------------------------------------------------
 
 
 class Candidate(BaseModel):
     """
-    Canonical Candidate Model.
-
-    Entire pipeline works exclusively on this model.
+    Canonical Candidate Profile.
     """
 
     model_config = ConfigDict(
+        extra="forbid",
         validate_assignment=True,
-        extra="ignore"
     )
 
-    candidate_id: Optional[str] = None
+    # ----------------------------------------------------
+    # Identity
+    # ----------------------------------------------------
 
-    full_name: Optional[str] = None
+    candidate_id: str | None = None
 
-    emails: List[EmailStr] = Field(default_factory=list)
+    full_name: str | None = None
 
-    phones: List[str] = Field(default_factory=list)
+    headline: str | None = None
 
-    location: Location = Field(default_factory=Location)
+    years_experience: float | None = None
 
-    links: Links = Field(default_factory=Links)
+    # ----------------------------------------------------
+    # Contact
+    # ----------------------------------------------------
 
-    headline: Optional[str] = None
+    emails: list[EmailStr] = Field(default_factory=list)
 
-    years_experience: Optional[float] = None
+    phones: list[str] = Field(default_factory=list)
 
-    skills: List[Skill] = Field(default_factory=list)
+    # ----------------------------------------------------
+    # Location
+    # ----------------------------------------------------
 
-    experience: List[Experience] = Field(default_factory=list)
+    location: Location = Field(
+        default_factory=Location
+    )
 
-    education: List[Education] = Field(default_factory=list)
+    # ----------------------------------------------------
+    # Links
+    # ----------------------------------------------------
 
-    provenance: List[Provenance] = Field(default_factory=list)
+    links: Links = Field(
+        default_factory=Links
+    )
 
-    confidence: Confidence = Field(default_factory=Confidence)
+    # ----------------------------------------------------
+    # Skills
+    # ----------------------------------------------------
+
+    skills: list[Skill] = Field(
+        default_factory=list
+    )
+
+    # ----------------------------------------------------
+    # Experience
+    # ----------------------------------------------------
+
+    experience: list[Experience] = Field(
+        default_factory=list
+    )
+
+    # ----------------------------------------------------
+    # Education
+    # ----------------------------------------------------
+
+    education: list[Education] = Field(
+        default_factory=list
+    )
+
+    # ----------------------------------------------------
+    # Provenance
+    # ----------------------------------------------------
+
+    provenance: list[Provenance] = Field(
+        default_factory=list
+    )
+
+    # ----------------------------------------------------
+    # Confidence
+    # ----------------------------------------------------
+
+    confidence: Confidence = Field(
+        default_factory=Confidence
+    )

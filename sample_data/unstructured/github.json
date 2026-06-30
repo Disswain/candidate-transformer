@@ -1,0 +1,34 @@
+{
+  "id": "github-001",
+  "login": "johnanderson",
+  "name": "John Anderson",
+  "bio": "Backend Developer | Python | FastAPI | Cloud",
+
+  "email": "john.anderson@example.com",
+
+  "phone": "+14155551234",
+
+  "city": "San Francisco",
+
+  "region": "California",
+
+  "country": "USA",
+
+  "languages": [
+    "Python",
+    "Go",
+    "SQL"
+  ],
+
+  "topics": [
+    "FastAPI",
+    "Docker",
+    "Microservices"
+  ],
+
+  "html_url": "https://github.com/johnanderson",
+
+  "blog": "https://johnanderson.dev",
+
+  "linkedin": "https://linkedin.com/in/johnanderson"
+}

@@ -1,48 +1,65 @@
 """
-Maps raw skill data into Skill models.
+Skill Mapper.
+
+Converts raw skill representations into a normalized
+list for the IntermediateCandidate.
+
+NOTE:
+No canonicalization happens here.
+That belongs in SkillNormalizer.
 """
 
 from __future__ import annotations
 
-from src.models.skill import Skill
+from typing import Any
 
 
 class SkillMapper:
+    """
+    Maps arbitrary skill formats into a list[str].
+    """
 
     @staticmethod
-    def from_list(skills: list) -> list[Skill]:
+    def from_value(value: Any) -> list[str]:
         """
-        Accepts:
-        [
-            "Python",
-            {"name": "Java"},
-            "React"
-        ]
+        Supported inputs
 
-        Returns:
-        List[Skill]
+        "Python"
+
+        ["Python","Java"]
+
+        [{"name":"Python"},{"name":"Java"}]
         """
 
-        result: list[Skill] = []
+        if value is None:
+            return []
 
-        for skill in skills:
+        if isinstance(value, str):
+            return [value.strip()] if value.strip() else []
 
-            if isinstance(skill, str):
+        if not isinstance(value, list):
+            return []
 
-                skill = skill.strip()
+        skills: list[str] = []
 
-                if skill:
-                    result.append(
-                        Skill(name=skill)
-                    )
+        for item in value:
 
-            elif isinstance(skill, dict):
+            if isinstance(item, str):
 
-                name = skill.get("name", "").strip()
+                item = item.strip()
 
-                if name:
-                    result.append(
-                        Skill(name=name)
-                    )
+                if item:
+                    skills.append(item)
 
-        return result
+            elif isinstance(item, dict):
+
+                name = item.get("name")
+
+                if isinstance(name, str):
+
+                    name = name.strip()
+
+                    if name:
+                        skills.append(name)
+
+        return skills

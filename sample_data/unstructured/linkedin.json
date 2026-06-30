@@ -1,0 +1,48 @@
+{
+  "profile": {
+    "name": "John Anderson",
+    "headline": "Senior Backend Developer",
+
+    "contact": {
+      "email": "john.anderson@example.com",
+      "phone": "+14155551234"
+    },
+
+    "location": {
+      "city": "San Francisco",
+      "region": "California",
+      "country": "USA"
+    },
+
+    "links": {
+      "linkedin": "https://linkedin.com/in/johnanderson",
+      "portfolio": "https://johnanderson.dev"
+    },
+
+    "skills": [
+      "Python",
+      "FastAPI",
+      "Docker",
+      "AWS",
+      "REST API",
+      "Kubernetes"
+    ],
+
+    "experience": [
+      {
+        "company": "TechNova Inc",
+        "title": "Senior Backend Engineer",
+        "start_date": "2021-04",
+        "end_date": "Present"
+      }
+    ],
+
+    "education": [
+      {
+        "institution": "University of Washington",
+        "degree": "B.Sc",
+        "field": "Computer Science"
+      }
+    ]
+  }
+}
