@@ -94,6 +94,8 @@ Confidence Calculator
       ▼
   Output JSON
 ```
+<img width="5088" height="1584" alt="image" src="https://github.com/user-attachments/assets/bfaff2dd-26e6-4a28-b6a3-c2c015916654" />
+
 
 Each stage has a single responsibility, which keeps extraction, normalization, merging, and output formatting independently testable and swappable.
 
