@@ -1,0 +1,337 @@
+{
+    "candidate_id": "C001",
+    "full_name": "John Anderson",
+    "emails": [
+        "john.anderson@example.com"
+    ],
+    "phones": [
+        "+14155551234"
+    ],
+    "location": {
+        "city": "San Francisco",
+        "region": "California",
+        "country": "US"
+    },
+    "links": {
+        "linkedin": "https://linkedin.com/in/johnanderson",
+        "github": "https://github.com/johnanderson",
+        "portfolio": "https://johnanderson.dev",
+        "other": [
+            "https://medium.com/@johnanderson"
+        ]
+    },
+    "headline": "Senior Backend Developer",
+    "years_experience": 6.0,
+    "skills": [
+        {
+            "name": "AWS"
+        },
+        {
+            "name": "Docker"
+        },
+        {
+            "name": "FastAPI"
+        },
+        {
+            "name": "Go"
+        },
+        {
+            "name": "Kubernetes"
+        },
+        {
+            "name": "Microservices"
+        },
+        {
+            "name": "PostgreSQL"
+        },
+        {
+            "name": "Python"
+        },
+        {
+            "name": "REST API"
+        },
+        {
+            "name": "SQL"
+        }
+    ],
+    "experience": [
+        {
+            "company": "TechNova Inc",
+            "title": "Senior Backend Engineer",
+            "start_date": "2021-04",
+            "end_date": null,
+            "description": "Designed scalable REST APIs and ETL pipelines."
+        },
+        {
+            "company": "CloudWorks",
+            "title": "Software Engineer",
+            "start_date": "2018-06",
+            "end_date": "2021-03",
+            "description": "Built distributed backend services."
+        }
+    ],
+    "education": [
+        {
+            "institution": "University of Washington",
+            "degree": "Bachelor of Science",
+            "field": "Computer Science",
+            "start_date": "2014",
+            "end_date": "2018"
+        }
+    ],
+    "confidence": {
+        "full_name": 1.0,
+        "emails": 0.95,
+        "phones": 0.95,
+        "location": 0.9,
+        "headline": 0.85,
+        "years_experience": 0.9,
+        "skills": 0.9,
+        "experience": 0.9,
+        "education": 0.9,
+        "links": 0.8,
+        "overall": 0.91
+    },
+    "provenance": [
+        {
+            "field": "full_name",
+            "source": "recruiter_csv",
+            "method": "normalization"
+        },
+        {
+            "field": "headline",
+            "source": "recruiter_csv",
+            "method": "normalization"
+        },
+        {
+            "field": "years_experience",
+            "source": "recruiter_csv",
+            "method": "normalization"
+        },
+        {
+            "field": "emails",
+            "source": "recruiter_csv",
+            "method": "normalization"
+        },
+        {
+            "field": "phones",
+            "source": "recruiter_csv",
+            "method": "normalization"
+        },
+        {
+            "field": "location",
+            "source": "recruiter_csv",
+            "method": "normalization"
+        },
+        {
+            "field": "links",
+            "source": "recruiter_csv",
+            "method": "normalization"
+        },
+        {
+            "field": "skills",
+            "source": "recruiter_csv",
+            "method": "normalization"
+        },
+        {
+            "field": "candidate_id",
+            "source": "ats_json",
+            "method": "normalization"
+        },
+        {
+            "field": "full_name",
+            "source": "ats_json",
+            "method": "normalization"
+        },
+        {
+            "field": "headline",
+            "source": "ats_json",
+            "method": "normalization"
+        },
+        {
+            "field": "years_experience",
+            "source": "ats_json",
+            "method": "normalization"
+        },
+        {
+            "field": "emails",
+            "source": "ats_json",
+            "method": "normalization"
+        },
+        {
+            "field": "phones",
+            "source": "ats_json",
+            "method": "normalization"
+        },
+        {
+            "field": "location",
+            "source": "ats_json",
+            "method": "normalization"
+        },
+        {
+            "field": "links",
+            "source": "ats_json",
+            "method": "normalization"
+        },
+        {
+            "field": "skills",
+            "source": "ats_json",
+            "method": "normalization"
+        },
+        {
+            "field": "experience",
+            "source": "ats_json",
+            "method": "normalization"
+        },
+        {
+            "field": "education",
+            "source": "ats_json",
+            "method": "normalization"
+        },
+        {
+            "field": "full_name",
+            "source": "linkedin",
+            "method": "normalization"
+        },
+        {
+            "field": "headline",
+            "source": "linkedin",
+            "method": "normalization"
+        },
+        {
+            "field": "emails",
+            "source": "linkedin",
+            "method": "normalization"
+        },
+        {
+            "field": "phones",
+            "source": "linkedin",
+            "method": "normalization"
+        },
+        {
+            "field": "location",
+            "source": "linkedin",
+            "method": "normalization"
+        },
+        {
+            "field": "links",
+            "source": "linkedin",
+            "method": "normalization"
+        },
+        {
+            "field": "skills",
+            "source": "linkedin",
+            "method": "normalization"
+        },
+        {
+            "field": "experience",
+            "source": "linkedin",
+            "method": "normalization"
+        },
+        {
+            "field": "education",
+            "source": "linkedin",
+            "method": "normalization"
+        },
+        {
+            "field": "candidate_id",
+            "source": "github",
+            "method": "normalization"
+        },
+        {
+            "field": "full_name",
+            "source": "github",
+            "method": "normalization"
+        },
+        {
+            "field": "headline",
+            "source": "github",
+            "method": "normalization"
+        },
+        {
+            "field": "emails",
+            "source": "github",
+            "method": "normalization"
+        },
+        {
+            "field": "phones",
+            "source": "github",
+            "method": "normalization"
+        },
+        {
+            "field": "location",
+            "source": "github",
+            "method": "normalization"
+        },
+        {
+            "field": "links",
+            "source": "github",
+            "method": "normalization"
+        },
+        {
+            "field": "skills",
+            "source": "github",
+            "method": "normalization"
+        },
+        {
+            "field": "full_name",
+            "source": "resume_pdf",
+            "method": "normalization"
+        },
+        {
+            "field": "emails",
+            "source": "resume_pdf",
+            "method": "normalization"
+        },
+        {
+            "field": "phones",
+            "source": "resume_pdf",
+            "method": "normalization"
+        },
+        {
+            "field": "location",
+            "source": "resume_pdf",
+            "method": "normalization"
+        },
+        {
+            "field": "links",
+            "source": "resume_pdf",
+            "method": "normalization"
+        },
+        {
+            "field": "skills",
+            "source": "resume_pdf",
+            "method": "normalization"
+        },
+        {
+            "field": "full_name",
+            "source": "resume_txt",
+            "method": "normalization"
+        },
+        {
+            "field": "emails",
+            "source": "resume_txt",
+            "method": "normalization"
+        },
+        {
+            "field": "phones",
+            "source": "resume_txt",
+            "method": "normalization"
+        },
+        {
+            "field": "location",
+            "source": "resume_txt",
+            "method": "normalization"
+        },
+        {
+            "field": "links",
+            "source": "resume_txt",
+            "method": "normalization"
+        },
+        {
+            "field": "skills",
+            "source": "resume_txt",
+            "method": "normalization"
+        }
+    ]
+}
