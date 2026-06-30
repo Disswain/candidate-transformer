@@ -20,6 +20,7 @@ from rapidfuzz import fuzz
 from src.models.candidate import Candidate
 from src.models.education import Education
 from src.models.experience import Experience
+from src.models.links import Links
 from src.models.skill import Skill
 from src.utils.constants import SOURCE_PRIORITY
 
@@ -121,6 +122,13 @@ class MergeResolver:
             ordered,
         )
 
+        # ------------------------------------------------
+        # Provenance
+        # ------------------------------------------------
+
+        for candidate in ordered:
+            merged.provenance.extend(candidate.provenance)
+
         return merged
 
     # =========================================================
@@ -173,16 +181,22 @@ class MergeResolver:
 
         for candidate in candidates:
 
-            for value in getattr(
-                candidate,
-                field,
-            ):
+            for value in getattr(candidate, field):
+
+                if value is None:
+                    continue
+
+                value = str(value).strip()
+
+                if not value:
+                    continue
 
                 if value not in seen:
-
                     seen.add(value)
-
                     values.append(value)
+        # for candidate in candidates:
+        #     print(candidate.provenance[0].source if candidate.provenance else "unknown")
+        #     print(getattr(candidate, field))
 
         return values
 
@@ -210,15 +224,14 @@ class MergeResolver:
                 best.lower(),
                 name.lower(),
             ) > 90:
-
                 continue
 
         return best
 
     # =========================================================
 
+    @staticmethod
     def _merge_location(
-        self,
         candidates: list[Candidate],
     ):
 
@@ -226,50 +239,51 @@ class MergeResolver:
 
             if (
                 candidate.location.city
+                or candidate.location.region
                 or candidate.location.country
             ):
-
                 return candidate.location
 
         return candidates[0].location
 
     # =========================================================
 
+    @staticmethod
     def _merge_links(
-        self,
         candidates: list[Candidate],
-    ):
+    ) -> Links:
 
-        links = candidates[0].links
+        merged = Links()
 
-        for candidate in candidates[1:]:
+        seen = set()
 
-            if (
-                not links.linkedin
-                and candidate.links.linkedin
-            ):
-                links.linkedin = candidate.links.linkedin
+        for candidate in candidates:
 
-            if (
-                not links.github
-                and candidate.links.github
-            ):
-                links.github = candidate.links.github
+            links = candidate.links
 
-            if (
-                not links.portfolio
-                and candidate.links.portfolio
-            ):
-                links.portfolio = candidate.links.portfolio
+            if not merged.linkedin and links.linkedin:
+                merged.linkedin = links.linkedin
 
-            links.other = list(
-                dict.fromkeys(
-                    links.other +
-                    candidate.links.other
-                )
-            )
+            if not merged.github and links.github:
+                merged.github = links.github
 
-        return links
+            if not merged.portfolio and links.portfolio:
+                merged.portfolio = links.portfolio
+
+            for url in links.other:
+
+                if url in (
+                    merged.linkedin,
+                    merged.github,
+                    merged.portfolio,
+                ):
+                    continue
+
+                if url not in seen:
+                    seen.add(url)
+                    merged.other.append(url)
+
+        return merged
 
     # =========================================================
 
@@ -285,14 +299,14 @@ class MergeResolver:
 
             for skill in candidate.skills:
 
-                if skill.name not in seen:
+                key = skill.name.lower()
 
-                    seen.add(skill.name)
-
+                if key not in seen:
+                    seen.add(key)
                     merged.append(skill)
 
         merged.sort(
-            key=lambda s: s.name
+            key=lambda s: s.name.lower()
         )
 
         return merged
@@ -318,9 +332,7 @@ class MergeResolver:
                 )
 
                 if key not in seen:
-
                     seen.add(key)
-
                     merged.append(exp)
 
         return merged
@@ -346,9 +358,7 @@ class MergeResolver:
                 )
 
                 if key not in seen:
-
                     seen.add(key)
-
                     merged.append(edu)
 
         return merged

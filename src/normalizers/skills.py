@@ -23,49 +23,86 @@ class SkillNormalizer(BaseNormalizer):
     """
 
     SKILL_MAP = {
-        # Python
+        # -----------------------------
+        # Programming Languages
+        # -----------------------------
         "python": "Python",
         "python3": "Python",
         "python 3": "Python",
 
-        # JavaScript
-        "javascript": "JavaScript",
-        "js": "JavaScript",
+        "java": "Java",
 
-        # C++
+        "c": "C",
         "cpp": "C++",
         "c++": "C++",
 
-        # React
+        "go": "Go",
+        "golang": "Go",
+
+        "javascript": "JavaScript",
+        "js": "JavaScript",
+
+        "typescript": "TypeScript",
+        "ts": "TypeScript",
+
+        # -----------------------------
+        # Frameworks
+        # -----------------------------
+        "react": "React",
         "reactjs": "React",
         "react.js": "React",
-        "react": "React",
 
-        # Node
-        "nodejs": "Node.js",
         "node": "Node.js",
+        "nodejs": "Node.js",
         "node.js": "Node.js",
 
-        # AI
-        "ai": "Artificial Intelligence",
-        "artificial intelligence": "Artificial Intelligence",
-
-        # ML
-        "ml": "Machine Learning",
-        "machinelearning": "Machine Learning",
-        "machine learning": "Machine Learning",
-
-        # SQL
-        "sql": "SQL",
-
-        # Others
-        "fastapi": "FastAPI",
         "django": "Django",
         "flask": "Flask",
+        "fastapi": "FastAPI",
+
+        # -----------------------------
+        # Databases
+        # -----------------------------
+        "sql": "SQL",
+        "mysql": "MySQL",
+        "postgres": "PostgreSQL",
+        "postgresql": "PostgreSQL",
+        "mongodb": "MongoDB",
+
+        # -----------------------------
+        # Cloud
+        # -----------------------------
+        "aws": "AWS",
+        "amazon web services": "AWS",
+        "azure": "Azure",
+        "gcp": "Google Cloud",
+        "google cloud": "Google Cloud",
+
+        # -----------------------------
+        # DevOps
+        # -----------------------------
         "docker": "Docker",
         "kubernetes": "Kubernetes",
         "git": "Git",
+        "github": "GitHub",
         "linux": "Linux",
+
+        # -----------------------------
+        # APIs
+        # -----------------------------
+        "rest": "REST",
+        "rest api": "REST API",
+        "restapi": "REST API",
+        "graphql": "GraphQL",
+
+        # -----------------------------
+        # AI / ML
+        # -----------------------------
+        "ai": "Artificial Intelligence",
+        "artificial intelligence": "Artificial Intelligence",
+        "ml": "Machine Learning",
+        "machine learning": "Machine Learning",
+        "machinelearning": "Machine Learning",
     }
 
     def normalize(
@@ -78,8 +115,8 @@ class SkillNormalizer(BaseNormalizer):
             full_name=candidate.full_name,
             headline=candidate.headline,
             years_experience=candidate.years_experience,
-            emails=candidate.emails,
-            phones=candidate.phones,
+            # emails=candidate.emails,
+            # phones=candidate.phones,
         )
 
         normalized: list[Skill] = []
@@ -105,9 +142,9 @@ class SkillNormalizer(BaseNormalizer):
                 skill.title(),
             )
 
-            if canonical not in seen:
+            if canonical.lower() not in seen:
 
-                seen.add(canonical)
+                seen.add(canonical.lower())
 
                 normalized.append(
                     Skill(
@@ -116,7 +153,7 @@ class SkillNormalizer(BaseNormalizer):
                 )
 
         normalized.sort(
-            key=lambda s: s.name
+            key=lambda s: s.name.lower(),
         )
 
         result.skills = normalized

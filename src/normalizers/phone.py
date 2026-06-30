@@ -72,7 +72,9 @@ class PhoneNormalizer(BaseNormalizer):
 
             except phonenumbers.NumberParseException:
                 continue
-
+        # print("\nSOURCE:", candidate.source)
+        # print("RAW:", candidate.phones)
+        # print("NORMALIZED:", phones)
         result.phones = phones
 
         return result

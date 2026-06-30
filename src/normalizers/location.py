@@ -49,8 +49,8 @@ class LocationNormalizer(BaseNormalizer):
             full_name=candidate.full_name,
             headline=candidate.headline,
             years_experience=candidate.years_experience,
-            emails=candidate.emails,
-            phones=candidate.phones,
+            # emails=candidate.emails,
+            # phones=candidate.phones,
         )
 
         city = self._clean(candidate.city)

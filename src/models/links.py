@@ -4,18 +4,24 @@ Canonical Links model.
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field, HttpUrl
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class Links(BaseModel):
-    """External profile links."""
+    """
+    Normalized external profile links.
+    """
 
     model_config = ConfigDict(
         extra="forbid",
     )
 
-    linkedin: HttpUrl | None = None
-    github: HttpUrl | None = None
-    portfolio: HttpUrl | None = None
+    linkedin: str | None = None
 
-    other: list[HttpUrl] = Field(default_factory=list)
+    github: str | None = None
+
+    portfolio: str | None = None
+
+    other: list[str] = Field(
+        default_factory=list,
+    )

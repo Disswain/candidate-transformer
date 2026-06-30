@@ -38,8 +38,8 @@ class DateNormalizer(BaseNormalizer):
             full_name=candidate.full_name,
             headline=candidate.headline,
             years_experience=candidate.years_experience,
-            emails=candidate.emails,
-            phones=candidate.phones,
+            # emails=candidate.emails,
+            # phones=candidate.phones,
         )
 
         result.experience = [

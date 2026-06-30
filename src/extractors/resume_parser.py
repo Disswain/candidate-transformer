@@ -17,6 +17,8 @@ from __future__ import annotations
 
 import re
 
+import phonenumbers
+
 from src.extractors.base_profile_parser import BaseProfileParser
 from src.models.intermediate import IntermediateCandidate
 from src.utils.constants import SOURCE_RESUME_TXT
@@ -35,8 +37,9 @@ class ResumeParser(BaseProfileParser):
         r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
     )
 
+    # Improved phone regex
     PHONE_PATTERN = re.compile(
-        r"(?:\+\d{1,3}[-.\s]?)?(?:\d{10,15})"
+        r"\+?\d[\d\s().-]{8,}\d"
     )
 
     LINKEDIN_PATTERN = re.compile(
@@ -102,11 +105,35 @@ class ResumeParser(BaseProfileParser):
 
         emails = self.EMAIL_PATTERN.findall(text)
         if emails:
-            email = emails[0]
+            email = emails[0].strip()
 
         phones = self.PHONE_PATTERN.findall(text)
+
         if phones:
-            phone = phones[0]
+
+            raw_phone = phones[0].strip()
+
+            try:
+
+                parsed = phonenumbers.parse(
+                    raw_phone,
+                    None,
+                )
+
+                if phonenumbers.is_valid_number(parsed):
+
+                    phone = phonenumbers.format_number(
+                        parsed,
+                        phonenumbers.PhoneNumberFormat.E164,
+                    )
+
+                else:
+
+                    phone = raw_phone
+
+            except phonenumbers.NumberParseException:
+
+                phone = raw_phone
 
         linkedin_urls = self.LINKEDIN_PATTERN.findall(text)
         if linkedin_urls:

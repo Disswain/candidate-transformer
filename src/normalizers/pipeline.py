@@ -9,11 +9,14 @@ from __future__ import annotations
 
 from src.models.candidate import Candidate
 from src.models.intermediate import IntermediateCandidate
-from src.normalizers.dates import DateNormalizer
-from src.normalizers.email import EmailNormalizer
-from src.normalizers.location import LocationNormalizer
+from src.models.provenance import Provenance
+
 from src.normalizers.name import NameNormalizer
+from src.normalizers.email import EmailNormalizer
 from src.normalizers.phone import PhoneNormalizer
+from src.normalizers.location import LocationNormalizer
+from src.normalizers.urls import URLNormalizer
+from src.normalizers.dates import DateNormalizer
 from src.normalizers.skills import SkillNormalizer
 
 
@@ -31,6 +34,8 @@ class NormalizationPipeline:
         self.phone = PhoneNormalizer()
 
         self.location = LocationNormalizer()
+
+        self.urls = URLNormalizer()
 
         self.dates = DateNormalizer()
 
@@ -86,6 +91,15 @@ class NormalizationPipeline:
         )
 
         # ----------------------------------------------
+        # URLs
+        # ----------------------------------------------
+
+        self._merge(
+            result,
+            self.urls.normalize(candidate),
+        )
+
+        # ----------------------------------------------
         # Dates
         # ----------------------------------------------
 
@@ -102,6 +116,20 @@ class NormalizationPipeline:
             result,
             self.skills.normalize(candidate),
         )
+
+        # ----------------------------------------------
+        # Provenance
+        # ----------------------------------------------
+
+        result.provenance.append(
+            Provenance(
+                field="candidate",
+                source=candidate.source,
+                method="normalization",
+            )
+        )
+        
+        
 
         return result
 
@@ -134,10 +162,19 @@ class NormalizationPipeline:
         if source.phones:
             target.phones = source.phones
 
-        if source.location != target.location:
+        if (
+            source.location.city
+            or source.location.region
+            or source.location.country
+        ):
             target.location = source.location
 
-        if source.links != target.links:
+        if (
+            source.links.linkedin
+            or source.links.github
+            or source.links.portfolio
+            or source.links.other
+        ):
             target.links = source.links
 
         if source.skills:
@@ -154,3 +191,4 @@ class NormalizationPipeline:
 
         if source.confidence:
             target.confidence = source.confidence
+    

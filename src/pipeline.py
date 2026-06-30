@@ -145,6 +145,16 @@ class CandidatePipeline:
         merged = self.merger.merge(
             normalized_candidates
         )
+        # print("\n--- BEFORE MERGE ---")
+        # for i, c in enumerate(normalized_candidates):
+        #     print(i, c.phones)
+
+        #     print("\n--- AFTER MERGE ---")
+        #     print(merged.phones)
+        # print("\n===== AFTER MERGE =====")
+        # print(merged.phones)
+        # print(len(merged.phones))
+
 
         merged.confidence = self.confidence.calculate(
             merged
@@ -163,6 +173,10 @@ class CandidatePipeline:
         output = self.projector.project(
             merged
         )
+
+        # print("\n===== AFTER PROJECTOR =====")
+        # print(output["phones"])
+        # print(len(output["phones"]))
 
         Path(output_file).parent.mkdir(
             parents=True,
