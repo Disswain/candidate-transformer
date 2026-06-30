@@ -126,8 +126,29 @@ class MergeResolver:
         # Provenance
         # ------------------------------------------------
 
+        # for candidate in ordered:
+        #     merged.provenance.extend(candidate.provenance)
+
+        # return merged
+        # ------------------------------------------------
+        # Provenance
+        # ------------------------------------------------
+
+        seen = set()
+
         for candidate in ordered:
-            merged.provenance.extend(candidate.provenance)
+
+            for item in candidate.provenance:
+
+                key = (
+                    item.field,
+                    item.source,
+                    item.method,
+                )
+
+                if key not in seen:
+                    seen.add(key)
+                    merged.provenance.append(item)
 
         return merged
 
@@ -313,52 +334,124 @@ class MergeResolver:
 
     # =========================================================
 
+    # 
+        # =========================================================
+
     @staticmethod
     def _merge_experience(
         candidates: list[Candidate],
     ) -> list[Experience]:
 
-        merged = []
-        seen = set()
+        merged: list[Experience] = []
+        seen: set[tuple] = set()
 
         for candidate in candidates:
 
             for exp in candidate.experience:
 
                 key = (
-                    exp.company,
-                    exp.title,
+                    (exp.company or "").strip().lower(),
+                    (exp.title or "").strip().lower(),
                     exp.start_date,
+                    exp.end_date,
                 )
 
-                if key not in seen:
-                    seen.add(key)
-                    merged.append(exp)
+                if key in seen:
+                    continue
+
+                seen.add(key)
+                merged.append(exp)
 
         return merged
 
     # =========================================================
+
+    # @staticmethod
+    # def _merge_education(
+    #     candidates: list[Candidate],
+    # ) -> list[Education]:
+
+    #     merged = []
+    #     seen = set()
+
+    #     for candidate in candidates:
+
+    #         for edu in candidate.education:
+
+    #             key = (
+    #                 edu.institution,
+    #                 edu.degree,
+    #                 edu.start_date,
+    #             )
+
+    #             if key not in seen:
+    #                 seen.add(key)
+    #                 merged.append(edu)
+
+    #     return merged
+        # =========================================================
 
     @staticmethod
     def _merge_education(
         candidates: list[Candidate],
     ) -> list[Education]:
 
-        merged = []
-        seen = set()
+        merged: list[Education] = []
+        seen: set[tuple] = set()
+
+        DEGREE_MAP = {
+            "b.sc": "bachelor of science",
+            "bsc": "bachelor of science",
+            "bachelor of science": "bachelor of science",
+
+            "m.sc": "master of science",
+            "msc": "master of science",
+            "master of science": "master of science",
+
+            "b.tech": "bachelor of technology",
+            "btech": "bachelor of technology",
+
+            "m.tech": "master of technology",
+            "mtech": "master of technology",
+        }
 
         for candidate in candidates:
 
             for edu in candidate.education:
 
-                key = (
-                    edu.institution,
-                    edu.degree,
-                    edu.start_date,
+                institution = (
+                    (edu.institution or "")
+                    .strip()
+                    .lower()
                 )
 
-                if key not in seen:
-                    seen.add(key)
-                    merged.append(edu)
+                degree = (
+                    (edu.degree or "")
+                    .strip()
+                    .lower()
+                )
+
+                degree = DEGREE_MAP.get(
+                    degree,
+                    degree,
+                )
+
+                field = (
+                    (edu.field or "")
+                    .strip()
+                    .lower()
+                )
+
+                key = (
+                    institution,
+                    degree,
+                    field,
+                )
+
+                if key in seen:
+                    continue
+
+                seen.add(key)
+                merged.append(edu)
 
         return merged

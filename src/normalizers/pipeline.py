@@ -18,6 +18,7 @@ from src.normalizers.location import LocationNormalizer
 from src.normalizers.urls import URLNormalizer
 from src.normalizers.dates import DateNormalizer
 from src.normalizers.skills import SkillNormalizer
+from src.normalizers.education import EducationNormalizer
 
 
 class NormalizationPipeline:
@@ -40,6 +41,8 @@ class NormalizationPipeline:
         self.dates = DateNormalizer()
 
         self.skills = SkillNormalizer()
+
+        self.education = EducationNormalizer()
 
     # ---------------------------------------------------------
 
@@ -109,6 +112,15 @@ class NormalizationPipeline:
         )
 
         # ----------------------------------------------
+        # education
+        # ----------------------------------------------
+        self._merge(
+            result,
+            self.education.normalize(candidate),
+        )
+
+
+        # ----------------------------------------------
         # Skills
         # ----------------------------------------------
 
@@ -121,15 +133,45 @@ class NormalizationPipeline:
         # Provenance
         # ----------------------------------------------
 
-        result.provenance.append(
-            Provenance(
-                field="candidate",
-                source=candidate.source,
-                method="normalization",
+        # result.provenance.append(
+        #     Provenance(
+        #         field="candidate",
+        #         source=candidate.source,
+        #         method="normalization",
+        #     )
+        # )
+        def add(field_name: str, value) -> None:
+            if value is None:
+                return
+
+            if isinstance(value, (list, dict)) and len(value) == 0:
+                return
+
+            result.provenance.append(
+                Provenance(
+                    field=field_name,
+                    source=candidate.source,
+                    method="normalization",
+                )
             )
-        )
-        
-        
+
+
+        add("candidate_id", result.candidate_id)
+        add("full_name", result.full_name)
+        add("headline", result.headline)
+        add("years_experience", result.years_experience)
+
+        add("emails", result.emails)
+        add("phones", result.phones)
+
+        add("location", result.location.model_dump())
+
+        add("links", result.links.model_dump())
+
+        add("skills", result.skills)
+        add("experience", result.experience)
+        add("education", result.education)
+                
 
         return result
 
