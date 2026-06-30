@@ -108,7 +108,7 @@ candidate-transformer/
 │
 ├── config/
 │   ├── default.json
-│   └── custom.json
+│   └──- custom.json
 │
 ├── sample_data/
 │   ├── structured/
