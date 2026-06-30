@@ -105,7 +105,8 @@ Each stage has a single responsibility, which keeps extraction, normalization, m
 candidate-transformer/
 │
 ├── config/
-│   └── default.json
+│   ├── default.json
+│   └── custom.json
 │
 ├── sample_data/
 │   ├── structured/
@@ -217,9 +218,26 @@ options:
   --output OUTPUT    Output JSON file path
 ```
 
+### Default Configuration
+
 ```bash
 python -m src.main --input sample_data --config config/default.json --output outputs/result.json
 ```
+
+### Custom Configuration
+
+The pipeline also supports configurable output schemas through runtime configuration.
+
+```bash
+python -m src.main --input sample_data --config config/custom.json --output outputs/custom.json
+```
+
+The custom configuration demonstrates:
+- Selecting a subset of output fields
+- Toggling confidence and provenance
+- Producing a different JSON schema without changing the application code
+
+
 
 | Flag       | Description                                  |
 |------------|-----------------------------------------------|
@@ -287,6 +305,9 @@ All transformation behavior is driven by `config/default.json`, including:
 - Which fields appear in the final projected output
 - Behavior when a field is missing across all sources
 - Normalization rules (e.g. date formats, phone region defaults)
+The repository includes:
+- `config/default.json` – Default canonical output schema.
+- `config/custom.json` – Example custom projection demonstrating configurable output fields.
 
 ---
 
