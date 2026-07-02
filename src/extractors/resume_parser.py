@@ -4,8 +4,7 @@ Resume Text Extractor.
 Parses a plain text resume (.txt) and converts it into an
 IntermediateCandidate.
 
-Responsibilities
-----------------
+Responsibilities:
 - Read resume text
 - Extract basic candidate information
 - Preserve raw data
@@ -14,11 +13,8 @@ Responsibilities
 """
 
 from __future__ import annotations
-
 import re
-
 import phonenumbers
-
 from src.extractors.base_profile_parser import BaseProfileParser
 from src.models.intermediate import IntermediateCandidate
 from src.utils.constants import SOURCE_RESUME_TXT
@@ -80,8 +76,6 @@ class ResumeParser(BaseProfileParser):
         logger.info("Resume parsed successfully.")
 
         return [candidate]
-
-    # ---------------------------------------------------------
 
     def _parse_resume(
         self,

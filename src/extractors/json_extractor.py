@@ -4,8 +4,7 @@ ATS JSON Extractor.
 Reads ATS JSON exports and converts them into
 IntermediateCandidate objects.
 
-Responsibilities
-----------------
+Responsibilities:
 - Read JSON
 - Support single candidate object
 - Support list of candidates
@@ -16,9 +15,7 @@ Responsibilities
 """
 
 from __future__ import annotations
-
 from typing import Any
-
 from src.interfaces.extractor import BaseExtractor
 from src.models.intermediate import IntermediateCandidate
 from src.utils.constants import SOURCE_ATS
@@ -26,7 +23,6 @@ from src.utils.file_loader import FileLoader
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
-
 
 class JSONExtractor(BaseExtractor):
     """
@@ -67,9 +63,7 @@ class JSONExtractor(BaseExtractor):
         )
 
         return candidates
-
-    # --------------------------------------------------
-
+    
     @staticmethod
     def _resolve_records(
         data: Any,
@@ -106,8 +100,6 @@ class JSONExtractor(BaseExtractor):
             return [data["candidate"]]
 
         return [data]
-
-    # --------------------------------------------------
 
     @staticmethod
     def _parse_candidate(
@@ -192,8 +184,6 @@ class JSONExtractor(BaseExtractor):
                 "raw_record": record
             },
         )
-
-    # --------------------------------------------------
 
     @staticmethod
     def _ensure_list(

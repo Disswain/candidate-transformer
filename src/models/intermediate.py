@@ -25,16 +25,11 @@ class IntermediateCandidate:
     """
     Internal representation before normalization.
     """
-
-    # --------------------------------------------------
     # Metadata
-    # --------------------------------------------------
 
     source: str
 
-    # --------------------------------------------------
-    # Identity
-    # --------------------------------------------------
+    # Identity-
 
     candidate_id: str | None = None
 
@@ -44,17 +39,13 @@ class IntermediateCandidate:
 
     years_experience: float | None = None
 
-    # --------------------------------------------------
-    # Contact
-    # --------------------------------------------------
+    # Contact-
 
     emails: list[str] = field(default_factory=list)
 
     phones: list[str] = field(default_factory=list)
 
-    # --------------------------------------------------
-    # Location
-    # --------------------------------------------------
+    # Location-
 
     city: str | None = None
 
@@ -62,9 +53,7 @@ class IntermediateCandidate:
 
     country: str | None = None
 
-    # --------------------------------------------------
-    # Links
-    # --------------------------------------------------
+    # Links-
 
     linkedin: str | None = None
 
@@ -74,26 +63,18 @@ class IntermediateCandidate:
 
     other_links: list[str] = field(default_factory=list)
 
-    # --------------------------------------------------
-    # Raw Skills
-    # --------------------------------------------------
+    # Raw Skills-
 
     skills: list[Any] = field(default_factory=list)
 
-    # --------------------------------------------------
-    # Raw Experience
-    # --------------------------------------------------
+    # Raw Experience-
 
     experience: list[dict] = field(default_factory=list)
 
-    # --------------------------------------------------
-    # Raw Education
-    # --------------------------------------------------
+    # Raw Education-
 
     education: list[dict] = field(default_factory=list)
 
-    # --------------------------------------------------
-    # Extra Fields
-    # --------------------------------------------------
+    # Extra Fields-
 
     metadata: dict[str, Any] = field(default_factory=dict)

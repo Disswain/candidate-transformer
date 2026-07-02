@@ -6,9 +6,7 @@ IntermediateCandidate.
 
 The actual parsing logic is reused from ResumeParser.
 """
-
 from __future__ import annotations
-
 from src.extractors.resume_parser import ResumeParser
 from src.models.intermediate import IntermediateCandidate
 from src.utils.constants import SOURCE_RESUME_PDF
@@ -17,14 +15,12 @@ from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-
 class PDFParser(ResumeParser):
     """
     Resume PDF parser.
 
     Inherits ResumeParser so the parsing logic is not duplicated.
     """
-
     def extract(
         self,
         source: str,

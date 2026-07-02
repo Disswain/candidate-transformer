@@ -3,12 +3,9 @@ Base Normalizer Interface.
 """
 
 from __future__ import annotations
-
 from abc import ABC, abstractmethod
-
 from src.models.candidate import Candidate
 from src.models.intermediate import IntermediateCandidate
-
 
 class BaseNormalizer(ABC):
     """
@@ -23,8 +20,7 @@ class BaseNormalizer(ABC):
         """
         Normalize extracted candidate data.
 
-        Returns
-        -------
+        Returns-
         Candidate
         """
         raise NotImplementedError

@@ -7,8 +7,7 @@ and an overall confidence score.
 Higher confidence is assigned to data originating
 from more reliable sources.
 
-Source Priority
----------------
+Source Priority:
 Recruiter CSV
 ATS
 LinkedIn
@@ -18,12 +17,9 @@ Resume TXT
 """
 
 from __future__ import annotations
-
 from statistics import mean
-
 from src.models.candidate import Candidate
 from src.models.confidence import Confidence
-
 
 class ConfidenceCalculator:
     """

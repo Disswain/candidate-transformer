@@ -4,7 +4,7 @@ Canonical Candidate Model
 This model represents the normalized candidate profile used
 throughout the remainder of the pipeline.
 
-Pipeline
+Pipeline given below:
 
 IntermediateCandidate
         │
@@ -25,9 +25,7 @@ Output JSON
 """
 
 from __future__ import annotations
-
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
-
 from src.models.confidence import Confidence
 from src.models.education import Education
 from src.models.experience import Experience
@@ -47,9 +45,8 @@ class Candidate(BaseModel):
         validate_assignment=True,
     )
 
-    # ----------------------------------------------------
-    # Identity
-    # ----------------------------------------------------
+    # Identity-
+  
 
     candidate_id: str | None = None
 
@@ -59,65 +56,48 @@ class Candidate(BaseModel):
 
     years_experience: float | None = None
 
-    # ----------------------------------------------------
-    # Contact
-    # ----------------------------------------------------
+    # Contact-
 
     emails: list[EmailStr] = Field(default_factory=list)
 
     phones: list[str] = Field(default_factory=list)
 
-    # ----------------------------------------------------
-    # Location
-    # ----------------------------------------------------
+    # Location-
 
     location: Location = Field(
         default_factory=Location
     )
 
-    # ----------------------------------------------------
-    # Links
-    # ----------------------------------------------------
-
+    # Links-
     links: Links = Field(
         default_factory=Links
     )
 
-    # ----------------------------------------------------
-    # Skills
-    # ----------------------------------------------------
+    # Skills-
 
     skills: list[Skill] = Field(
         default_factory=list
     )
 
-    # ----------------------------------------------------
-    # Experience
-    # ----------------------------------------------------
+    # Experience-
 
     experience: list[Experience] = Field(
         default_factory=list
     )
 
-    # ----------------------------------------------------
-    # Education
-    # ----------------------------------------------------
+    # Education-
 
     education: list[Education] = Field(
         default_factory=list
     )
 
-    # ----------------------------------------------------
-    # Provenance
-    # ----------------------------------------------------
+    # Provenance-
 
     provenance: list[Provenance] = Field(
         default_factory=list
     )
 
-    # ----------------------------------------------------
-    # Confidence
-    # ----------------------------------------------------
+    # Confidence-
 
     confidence: Confidence = Field(
         default_factory=Confidence

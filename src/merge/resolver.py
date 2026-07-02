@@ -3,8 +3,7 @@ Candidate Merge Resolver.
 
 Merges multiple canonical Candidate objects into one.
 
-Merge Priority
---------------
+Merge Priority:
 Recruiter CSV
 ATS
 LinkedIn
@@ -14,16 +13,13 @@ Resume TXT
 """
 
 from __future__ import annotations
-
 from rapidfuzz import fuzz
-
 from src.models.candidate import Candidate
 from src.models.education import Education
 from src.models.experience import Experience
 from src.models.links import Links
 from src.models.skill import Skill
 from src.utils.constants import SOURCE_PRIORITY
-
 
 class MergeResolver:
     """
@@ -45,9 +41,7 @@ class MergeResolver:
             key=self._priority,
         )
 
-        # ------------------------------------------------
-        # Identity
-        # ------------------------------------------------
+        # Identity-
 
         merged.candidate_id = self._first(
             ordered,
@@ -68,9 +62,8 @@ class MergeResolver:
             "years_experience",
         )
 
-        # ------------------------------------------------
-        # Contact
-        # ------------------------------------------------
+       
+        # Contact-
 
         merged.emails = self._unique(
             ordered,
@@ -82,57 +75,40 @@ class MergeResolver:
             "phones",
         )
 
-        # ------------------------------------------------
-        # Location
-        # ------------------------------------------------
+        
+        # Location-
+        
 
         merged.location = self._merge_location(
             ordered,
         )
 
-        # ------------------------------------------------
-        # Links
-        # ------------------------------------------------
+        # Links-
 
         merged.links = self._merge_links(
             ordered,
         )
 
-        # ------------------------------------------------
-        # Skills
-        # ------------------------------------------------
+        # Skills-
 
         merged.skills = self._merge_skills(
             ordered,
         )
 
-        # ------------------------------------------------
-        # Experience
-        # ------------------------------------------------
+        # Experience-
 
         merged.experience = self._merge_experience(
             ordered,
         )
 
-        # ------------------------------------------------
-        # Education
-        # ------------------------------------------------
+        # Education-
 
         merged.education = self._merge_education(
             ordered,
         )
 
-        # ------------------------------------------------
-        # Provenance
-        # ------------------------------------------------
-
-        # for candidate in ordered:
-        #     merged.provenance.extend(candidate.provenance)
-
-        # return merged
-        # ------------------------------------------------
-        # Provenance
-        # ------------------------------------------------
+       
+        # Provenance-
 
         seen = set()
 
@@ -215,9 +191,6 @@ class MergeResolver:
                 if value not in seen:
                     seen.add(value)
                     values.append(value)
-        # for candidate in candidates:
-        #     print(candidate.provenance[0].source if candidate.provenance else "unknown")
-        #     print(getattr(candidate, field))
 
         return values
 
@@ -364,33 +337,7 @@ class MergeResolver:
 
         return merged
 
-    # =========================================================
-
-    # @staticmethod
-    # def _merge_education(
-    #     candidates: list[Candidate],
-    # ) -> list[Education]:
-
-    #     merged = []
-    #     seen = set()
-
-    #     for candidate in candidates:
-
-    #         for edu in candidate.education:
-
-    #             key = (
-    #                 edu.institution,
-    #                 edu.degree,
-    #                 edu.start_date,
-    #             )
-
-    #             if key not in seen:
-    #                 seen.add(key)
-    #                 merged.append(edu)
-
-    #     return merged
-        # =========================================================
-
+    
     @staticmethod
     def _merge_education(
         candidates: list[Candidate],

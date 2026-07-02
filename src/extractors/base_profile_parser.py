@@ -2,14 +2,12 @@
 Base Profile Parser.
 
 Shared functionality for profile-based extractors such as:
-
 - LinkedIn
 - GitHub
 - Resume TXT
 - Resume PDF
 
-Responsibilities
-----------------
+Responsibilities:
 - Safe dictionary access
 - List conversion
 - Candidate creation
@@ -19,16 +17,13 @@ This class DOES NOT perform normalization.
 """
 
 from __future__ import annotations
-
 from abc import ABC, abstractmethod
 from typing import Any
-
 from src.interfaces.extractor import BaseExtractor
 from src.mappers.education_mapper import EducationMapper
 from src.mappers.experience_mapper import ExperienceMapper
 from src.mappers.skill_mapper import SkillMapper
 from src.models.intermediate import IntermediateCandidate
-
 
 class BaseProfileParser(BaseExtractor, ABC):
     """
@@ -44,9 +39,7 @@ class BaseProfileParser(BaseExtractor, ABC):
         """
         Safely access nested dictionaries.
 
-        Example
-        -------
-        safe_get(data, "contact", "email")
+        Example: safe_get(data, "contact", "email")
         """
 
         value: Any = data

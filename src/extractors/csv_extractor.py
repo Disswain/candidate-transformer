@@ -4,8 +4,7 @@ Recruiter CSV Extractor.
 Reads recruiter CSV files and converts each row into an
 IntermediateCandidate.
 
-Responsibilities
-----------------
+Responsibilities:
 - Read recruiter CSV
 - Validate required columns
 - Handle missing values
@@ -15,11 +14,8 @@ Responsibilities
 """
 
 from __future__ import annotations
-
 from typing import Any
-
 import pandas as pd
-
 from src.interfaces.extractor import BaseExtractor
 from src.models.intermediate import IntermediateCandidate
 from src.utils.constants import SOURCE_RECRUITER
@@ -27,7 +23,6 @@ from src.utils.file_loader import FileLoader
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
-
 
 class CSVExtractor(BaseExtractor):
     """

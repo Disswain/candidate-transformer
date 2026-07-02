@@ -4,8 +4,7 @@ LinkedIn Profile Extractor.
 Reads a LinkedIn profile JSON file and converts it into an
 IntermediateCandidate.
 
-Responsibilities
-----------------
+Responsibilities:
 - Read LinkedIn JSON
 - Extract candidate fields
 - Never normalize
@@ -14,7 +13,6 @@ Responsibilities
 """
 
 from __future__ import annotations
-
 from src.extractors.base_profile_parser import BaseProfileParser
 from src.models.intermediate import IntermediateCandidate
 from src.utils.constants import SOURCE_LINKEDIN

@@ -4,8 +4,7 @@ GitHub Profile Extractor.
 Reads a GitHub profile JSON export and converts it into an
 IntermediateCandidate.
 
-Responsibilities
-----------------
+Responsibilities:
 - Read GitHub JSON
 - Extract candidate fields
 - Infer skills from languages/topics (if present)
@@ -14,9 +13,7 @@ Responsibilities
 """
 
 from __future__ import annotations
-
 from typing import Any
-
 from src.extractors.base_profile_parser import BaseProfileParser
 from src.models.intermediate import IntermediateCandidate
 from src.utils.constants import SOURCE_GITHUB
@@ -54,9 +51,7 @@ class GitHubParser(BaseProfileParser):
         logger.info("GitHub profile parsed successfully.")
 
         return [candidate]
-
-    # ---------------------------------------------------------
-
+    
     def _transform(
         self,
         data: dict[str, Any],

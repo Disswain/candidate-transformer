@@ -7,11 +7,8 @@ The pipeline never instantiates extractors directly.
 """
 
 from __future__ import annotations
-
 from pathlib import Path
-
 from src.interfaces.extractor import BaseExtractor
-
 
 class ExtractorRegistry:
     """

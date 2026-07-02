@@ -4,13 +4,9 @@ Base Extractor Interface.
 Every extractor converts an external source into one or more
 IntermediateCandidate objects.
 """
-
 from __future__ import annotations
-
 from abc import ABC, abstractmethod
-
 from src.models.intermediate import IntermediateCandidate
-
 
 class BaseExtractor(ABC):
     """
@@ -25,13 +21,11 @@ class BaseExtractor(ABC):
         """
         Extract candidate data from a source.
 
-        Parameters
-        ----------
+        Parameters-
         source:
             File path or URL.
 
-        Returns
-        -------
+        Returns-
         list[IntermediateCandidate]
         """
         raise NotImplementedError
